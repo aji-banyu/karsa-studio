@@ -1,0 +1,84 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #0ea5e9; /* Warna Aksen: Biru Langit Modern */
+}
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    outline: none;
+    border: none;
+  }
+
+  html {
+    font-size: 62.5%;
+    scroll-behavior: smooth;
+  }
+
+  /* --- TEMA TERANG (DEFAULT) --- */
+  :root {
+    --bg-main: #f1f5f9; /* Slate 100 - Abu-abu sangat terang & lembut */
+    --bg-secondary: #ffffff; /* Putih untuk Card agar ada dimensi */
+    --text-main: #334155; /* Slate 700 - Abu-abu gelap (bukan hitam pekat) */
+    --text-muted: #64748b;
+    --border-color: #cbd5e1;
+    --font-heading: "Outfit", sans-serif;
+    --font-body: "Plus Jakarta Sans", sans-serif;
+  }
+
+  /* --- TEMA GELAP (Teks tidak terlalu putih menyala) --- */
+  .dark {
+    --bg-main: #0f172a;
+    --bg-secondary: #1e293b;
+    --text-main: #e2e8f0; /* Slate 200 - Putih redup, sangat nyaman di mata */
+    --text-muted: #94a3b8;
+    --border-color: #334155;
+  }
+
+  /* Menerapkan variabel ke tag Body dengan transisi halus */
+  body {
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: "Poppins", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    font-size: 1.6rem;
+    transition:
+      background-color 0.4s ease,
+      color 0.4s ease;
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-heading);
+  }
+
+  body,
+  p,
+  a,
+  span,
+  button,
+  input,
+  textarea,
+  li {
+    font-family: var(--font-body);
+  }
+
+  section {
+    @apply min-h-screen px-[9%] pt-[10rem] pb-[5rem];
+  }
+
+  @media (max-width: 991px) {
+    section {
+      @apply px-[5%];
+    }
+  }
+}
