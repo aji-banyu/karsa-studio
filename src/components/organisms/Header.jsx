@@ -56,8 +56,8 @@ export default function Header({ activeSection }) {
             onClick={() => setIsMenuOpen(false)}
             className={`block text-[2rem] md:text-[1.7rem] my-12 md:my-0 md:ml-16 capitalize transition-all duration-300 font-medium ${
               activeSection === link
-                ? "text-[var(--color-primary)] drop-shadow-[0_0_0.8rem_var(--color-primary)]"
-                : "text-[var(--text-main)] hover:text-[var(--color-primary)] hover:drop-shadow-[0_0_0.8rem_var(--color-primary)]"
+                ? "text-[var(--color-primary)]"
+                : "text-[var(--text-main)] hover:text-[var(--color-primary)]"
             }`}
           >
             {link}

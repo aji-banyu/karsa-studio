@@ -3,7 +3,7 @@ import {
   BiLogoInstagramAlt,
   BiLogoFacebook,
   BiLogoWhatsapp,
-  BiLogoGithub,
+  // BiLogoGithub,
   BiUpArrowAlt,
 } from "react-icons/bi";
 
@@ -71,7 +71,7 @@ export default function Footer() {
           <h3 className="text-[2.2rem] font-semibold text-[var(--text-main)] mb-6">
             Tautan Cepat
           </h3>
-          <ul className="flex flex-col gap-4 text-[1.6rem]">
+          <ul className="flex flex-col gap-4 text-[1.6rem] list-none">
             {["Home", "About", "Services", "Portofolio", "Contact"].map(
               (item, index) => (
                 <li key={index}>

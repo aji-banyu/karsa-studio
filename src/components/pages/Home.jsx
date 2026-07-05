@@ -9,6 +9,7 @@ import Contact from "../organisms/Contact";
 import Footer from "../organisms/Footer";
 import FAQ from "../organisms/FAQ";
 import SEO from "../atoms/SEO";
+import TechMarquee from "../organisms/TechMarquee";
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState("home");
@@ -79,6 +80,7 @@ export default function Home() {
 
       <main>
         <Hero ref={setRef} />
+        <TechMarquee />
         <About ref={setRef} />
         <Services ref={setRef} />
         <Portfolio ref={setRef} />

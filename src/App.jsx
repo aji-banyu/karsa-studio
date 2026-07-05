@@ -19,6 +19,7 @@ import Preloader from "./components/molecules/Preloader";
 // Import Komponen Admin Dashboard
 import DashboardLayout from "./components/templates/DashboardLayout";
 import ManagePortfolio from "./components/pages/dashboard/ManagePortfolio";
+import FloatingWhatsApp from "./components/atoms/FloatingWhatsApp";
 
 function AppContent() {
   const location = useLocation();
@@ -54,6 +55,7 @@ function AppContent() {
             className="fixed top-0 left-0 right-0 h-[5px] bg-[var(--color-primary)] origin-left z-[100]"
             style={{ scaleX }}
           />
+          <FloatingWhatsApp />
           <ThemeToggle />
         </>
       )}

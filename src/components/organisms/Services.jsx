@@ -82,7 +82,7 @@ export default function Services({ ref }) {
             className={`relative flex flex-col h-full p-[3rem] rounded-[2rem] text-center border-[0.1rem] border-[var(--border-color)] transition-all duration-400 group overflow-hidden ${
               service.isComingSoon
                 ? "bg-[var(--bg-main)] opacity-80 cursor-default"
-                : "bg-gradient-to-br from-[var(--bg-secondary)] to-[var(--bg-main)] shadow-lg hover:scale-[1.03] hover:border-[var(--color-primary)] hover:shadow-[0_0_2rem_var(--color-primary)]"
+                : "bg-gradient-to-br from-[var(--bg-secondary)] to-[var(--bg-main)] shadow-lg hover:scale-[1.03] hover:border-[var(--color-primary)] hover:shadow-[0_0_.5rem_var(--color-primary)]"
             }`}
           >
             {/* Efek Cahaya Halus */}

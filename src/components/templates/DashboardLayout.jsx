@@ -24,13 +24,13 @@ export default function DashboardLayout() {
         <aside className="w-[280px] bg-slate-900 border-r border-slate-800/60 flex flex-col justify-between z-20 shadow-2xl shrink-0">
           <div>
             {/* LOGO */}
-            <div className="h-20 flex flex-col justify-center px-8 border-b border-slate-800/60">
+            <div className="h-20  pt-2 flex flex-col justify-center px-8 border-b border-slate-800/60">
               <h1
                 className="text-[24px] leading-none font-extrabold tracking-wide text-white flex items-center gap-1"
                 style={{ fontFamily: "var(--font-heading)" }}
               >
-                KARSA<span style={{ color: "var(--color-primary)" }}>.</span>
-                STUDIO
+                KARSA
+                <span className="text-[var(--color-primary)]">.STUDIO</span>
               </h1>
               <p className="text-[11px] font-medium text-slate-500 uppercase tracking-widest mt-1">
                 Workspace

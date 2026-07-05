@@ -51,21 +51,24 @@ export default function Portfolio({ ref }) {
       {status === "succeeded" && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[2.5rem] max-w-[1200px] mx-auto auto-rows-[350px]">
           {/* Mengambil 4 data teratas dari Database */}
-          {portfolios.slice(0, 4).map((project, index) => {
-            const gridSpan =
-              index === 0 || index === 3
-                ? "md:col-span-2 lg:col-span-2"
-                : "md:col-span-1 lg:col-span-1";
+          {portfolios
+            .filter((project) => project.is_published !== false)
+            .slice(0, 4)
+            .map((project, index) => {
+              const gridSpan =
+                index === 0 || index === 3
+                  ? "md:col-span-2 lg:col-span-2"
+                  : "md:col-span-1 lg:col-span-1";
 
-            return (
-              <PortfolioCard
-                key={project.id}
-                project={project} // Data aslinya dikirim ke PortfolioCard
-                index={index}
-                className={`min-h-[350px] h-full ${gridSpan}`}
-              />
-            );
-          })}
+              return (
+                <PortfolioCard
+                  key={project.id}
+                  project={project} // Data aslinya dikirim ke PortfolioCard
+                  index={index}
+                  className={`min-h-[350px] h-full ${gridSpan}`}
+                />
+              );
+            })}
         </div>
       )}
 
