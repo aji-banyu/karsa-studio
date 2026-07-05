@@ -1,70 +1,84 @@
-import { useState, useEffect, useRef, useCallback } from "react";
-import Header from "./components/organisms/Header";
-import Hero from "./components/organisms/Hero";
-import About from "./components/organisms/About";
-import Services from "./components/organisms/Services";
-import Portfolio from "./components/organisms/Portfolio";
-import Contact from "./components/organisms/Contact";
-import Footer from "./components/organisms/Footer";
+// src/App.jsx
+import { useState, useEffect } from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
+import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion";
+import { Toaster } from "react-hot-toast";
+
+// Import Komponen Hiasan & Landing Page
 import ThemeToggle from "./components/atoms/ThemeToggle";
-import { motion, useScroll, useSpring } from "framer-motion";
+import CustomCursor from "./components/atoms/CustomCursor";
+import Home from "./components/pages/Home";
+import PortfolioDetail from "./components/pages/PortfolioDetail";
+import Preloader from "./components/molecules/Preloader";
 
-export default function App() {
-  const [activeSection, setActiveSection] = useState("home");
+// Import Komponen Admin Dashboard
+import DashboardLayout from "./components/templates/DashboardLayout";
+import ManagePortfolio from "./components/pages/dashboard/ManagePortfolio";
 
-  const sectionRefs = useRef([]);
-
-  const setRef = useCallback((el) => {
-    if (el && !sectionRefs.current.includes(el)) {
-      sectionRefs.current.push(el);
-    }
-  }, []);
-
-  useEffect(() => {
-    const observerOptions = {
-      root: null,
-      rootMargin: "-20% 0px -60% 0px",
-      threshold: 0,
-    };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
-        }
-      });
-    }, observerOptions);
-
-    sectionRefs.current.forEach((section) => {
-      observer.observe(section);
-    });
-
-    return () => observer.disconnect();
-  }, []);
-
+function AppContent() {
+  const location = useLocation();
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
     damping: 30,
     restDelta: 0.001,
   });
+  const [isLoading, setIsLoading] = useState(true);
+
+  // LOGIKA UTAMA: Deteksi apakah user sedang di Dashboard
+  const isAdminRoute = location.pathname.startsWith("/admin");
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <>
-      <motion.div
-        className="fixed top-0 left-0 right-0 h-[5px] bg-[var(--color-primary)] origin-left z-[100]"
-        style={{ scaleX }}
-      />
-      <Header activeSection={activeSection} />
-      <ThemeToggle />
-      <main>
-        <Hero ref={setRef} />
-        <About ref={setRef} />
-        <Services ref={setRef} />
-        <Portfolio ref={setRef} />
-        <Contact ref={setRef} />
-      </main>
-      <Footer />
+      <AnimatePresence mode="wait">
+        {isLoading && <Preloader key="preloader" />}
+      </AnimatePresence>
+
+      <Toaster position="bottom-right" />
+
+      {/* RENDER BERSYARAT: Hanya tampil di luar /admin */}
+      {!isAdminRoute && (
+        <>
+          <CustomCursor />
+          <motion.div
+            className="fixed top-0 left-0 right-0 h-[5px] bg-[var(--color-primary)] origin-left z-[100]"
+            style={{ scaleX }}
+          />
+          <ThemeToggle />
+        </>
+      )}
+
+      {/* Rute Aplikasi */}
+      <AnimatePresence mode="wait">
+        <Routes location={location} key={location.pathname}>
+          {/* Rute Pengunjung */}
+          <Route path="/" element={<Home />} />
+          <Route path="/portfolio/:id" element={<PortfolioDetail />} />
+
+          {/* Rute Administrator */}
+          <Route path="/admin" element={<DashboardLayout />}>
+            <Route path="portfolio" element={<ManagePortfolio />} />
+          </Route>
+        </Routes>
+      </AnimatePresence>
     </>
+  );
+}
+
+export default function App() {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
   );
 }

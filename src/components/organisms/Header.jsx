@@ -11,7 +11,14 @@ export default function Header({ activeSection }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navLinks = ["home", "about", "services", "portofolio", "contact"];
+  const navLinks = [
+    "home",
+    "about",
+    "services",
+    // "faq",
+    "portofolio",
+    "contact",
+  ];
 
   return (
     <header

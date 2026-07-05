@@ -32,6 +32,11 @@
     --font-body: "Plus Jakarta Sans", sans-serif;
   }
 
+  /* Khusus Dashboard Admin Karsa Studio */
+  html.admin-mode {
+    font-size: 16px !important;
+  }
+
   /* --- TEMA GELAP (Teks tidak terlalu putih menyala) --- */
   .dark {
     --bg-main: #0f172a;
