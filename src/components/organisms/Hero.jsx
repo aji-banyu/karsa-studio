@@ -87,7 +87,7 @@ export default function Hero({ ref }) {
           {/* Render Spline 3D */}
           <div className="absolute inset-0 w-full h-full pointer-events-none md:pointer-events-auto">
             <Spline
-              className=" ml-9"
+              className=" ml-9 w-full"
               scene="https://prod.spline.design/eildHLAFt-9c1Y9R/scene.splinecode"
             />
           </div>

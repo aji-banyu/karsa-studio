@@ -25,12 +25,13 @@ export default function DashboardLayout() {
     // Container utama dikunci di Dark Mode permanen untuk kesan Premium "Ruang Kendali"
     <div className="flex h-screen bg-slate-950 font-sans text-slate-200 overflow-hidden selection:bg-[var(--color-primary)] selection:text-white">
       {/* SIDEBAR - Desain Modern dengan efek Glass/Transparan halus */}
-      <aside className="w-[280px] shrink-0 bg-slate-900/80 backdrop-blur-xl border-r border-slate-800/80 flex flex-col z-20 shadow-[4px_0_24px_rgba(0,0,0,0.2)]">
+      <aside className="w-[280px] pt-4 shrink-0 bg-slate-900/80 backdrop-blur-xl border-r border-slate-800/80 flex flex-col z-20 shadow-[4px_0_24px_rgba(0,0,0,0.2)]">
         {/* Area Logo / Brand */}
         <div className="h-24 flex items-center px-8 border-b border-slate-800/80">
           <div className="flex flex-col">
             <h2 className="text-[24px] font-extrabold text-white tracking-wide leading-tight">
-              Karsa<span style={{ color: "var(--color-primary)" }}>.</span>
+              Karsa
+              <span style={{ color: "var(--color-primary)" }}>.Studio</span>
             </h2>
             <span className="text-[11px] font-semibold tracking-[0.2em] text-slate-500 uppercase mt-0.5">
               Admin Workspace

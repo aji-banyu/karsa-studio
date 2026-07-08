@@ -45,11 +45,6 @@ export default function Overview() {
         >
           Karsa Studio Workspace
         </h1>
-        <p className="text-slate-400 text-[14px] mt-2 max-w-xl leading-relaxed">
-          Pusat kendali konten landing page. Semua perubahan data pada
-          portofolio akan langsung tersinkronisasi dan berubah secara instan ke
-          sisi pengunjung.
-        </p>
       </div>
 
       {/* STATS CARDS GRID (100% Dinamis dari Supabase) */}
@@ -179,10 +174,6 @@ export default function Overview() {
             >
               Akses Cepat
             </h3>
-            <p className="text-slate-500 text-[13px] leading-relaxed">
-              Gunakan jalan pintas ini untuk langsung memanipulasi data
-              portofolio kamu tanpa harus mencari menu lagi.
-            </p>
           </div>
 
           <div className="space-y-3 mt-6">
