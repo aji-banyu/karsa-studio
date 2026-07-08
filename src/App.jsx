@@ -20,6 +20,7 @@ import Preloader from "./components/molecules/Preloader";
 import DashboardLayout from "./components/templates/DashboardLayout";
 import ManagePortfolio from "./components/pages/dashboard/ManagePortfolio";
 import FloatingWhatsApp from "./components/atoms/FloatingWhatsApp";
+import Overview from "./components/pages/dashboard/Overview";
 
 function AppContent() {
   const location = useLocation();
@@ -49,7 +50,7 @@ function AppContent() {
 
       {/* RENDER BERSYARAT: Hanya tampil di luar /admin */}
       {!isAdminRoute && (
-        <>
+        <div className="w-full overflow-x-hidden relative">
           <CustomCursor />
           <motion.div
             className="fixed top-0 left-0 right-0 h-[5px] bg-[var(--color-primary)] origin-left z-[100]"
@@ -57,7 +58,7 @@ function AppContent() {
           />
           <FloatingWhatsApp />
           <ThemeToggle />
-        </>
+        </div>
       )}
 
       {/* Rute Aplikasi */}
@@ -69,6 +70,7 @@ function AppContent() {
 
           {/* Rute Administrator */}
           <Route path="/admin" element={<DashboardLayout />}>
+            <Route index element={<Overview />} />
             <Route path="portfolio" element={<ManagePortfolio />} />
           </Route>
         </Routes>

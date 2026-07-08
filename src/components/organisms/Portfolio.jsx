@@ -40,10 +40,42 @@ export default function Portfolio({ ref }) {
         </p>
       </motion.div>
 
-      {/* Loading State saat mengambil data */}
+      {/* Loading State saat mengambil data dengan skeleton loading*/}
       {status === "loading" && (
-        <div className="flex justify-center items-center py-20">
-          <div className="w-10 h-10 border-4 border-[var(--color-primary)] border-t-transparent rounded-full animate-spin"></div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-[2.5rem] max-w-[1200px] mx-auto auto-rows-[350px]">
+          {[...Array(4)].map((_, index) => {
+            // Samakan persis dengan logika bento grid asli agar tidak terjadi lonjakan layout (layout shift)
+            const gridSpan =
+              index === 0 || index === 3
+                ? "md:col-span-2 lg:col-span-2"
+                : "md:col-span-1 lg:col-span-1";
+
+            return (
+              <div
+                key={index}
+                className={`w-full h-full rounded-[1.5rem] p-[3rem] flex flex-col justify-end bg-slate-900/40 border border-slate-800/40 animate-pulse relative overflow-hidden ${gridSpan}`}
+              >
+                {/* Efek Shimmer/Kilatan cahaya meluncur */}
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/[0.03] to-transparent -translate-x-full animate-[shimmer_2s_infinite]"></div>
+
+                <div className="space-y-4">
+                  {/* Skeleton Badge Kategori */}
+                  <div className="w-28 h-8 rounded-full bg-slate-800/80"></div>
+                  {/* Skeleton Judul Proyek */}
+                  <div className="w-2/3 h-10 rounded-xl bg-slate-800/80"></div>
+                  {/* Skeleton Deskripsi Pendek */}
+                  <div className="w-full h-5 rounded-lg bg-slate-800/40"></div>
+
+                  <div className="flex items-center justify-between pt-2">
+                    {/* Skeleton Tech Stack */}
+                    <div className="w-1/3 h-5 rounded-lg bg-slate-800/60"></div>
+                    {/* Skeleton Tombol Bulat */}
+                    <div className="w-[4.5rem] h-[4.5rem] rounded-full bg-slate-800/80"></div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
 

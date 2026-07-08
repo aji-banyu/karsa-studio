@@ -11,7 +11,7 @@ export default function FloatingWhatsApp() {
   const waLink = `https://wa.me/${phoneNumber}?text=${message}`;
 
   return (
-    <div className="fixed bottom-10 right-10 z-[90] flex items-center justify-center">
+    <div className="fixed bottom-5 right-5 md:bottom-10 md:right-10 z-[90] flex items-center justify-center">
       {/* Efek Cahaya Berdenyut (Pulse) di belakang tombol */}
       <div className="absolute inset-0 bg-emerald-500/40 rounded-full blur-xl animate-pulse"></div>
 

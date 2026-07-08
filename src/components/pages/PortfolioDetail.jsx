@@ -25,8 +25,48 @@ export default function PortfolioDetail() {
   // 3. Tampilkan efek loading saat data sedang ditarik dari database
   if (status === "loading" || status === "idle") {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[var(--bg-main)]">
-        <div className="w-10 h-10 border-4 border-[var(--color-primary)] border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-screen bg-[var(--bg-main)] py-16 px-[5%] md:px-[9%] animate-pulse">
+        <div className="max-w-[1200px] mx-auto pt-10 space-y-8">
+          {/* Skeleton Tombol Kembali */}
+          <div className="w-32 h-12 rounded-full bg-slate-800/50"></div>
+
+          {/* Skeleton Header Proyek */}
+          <div className="space-y-4">
+            <div className="w-3/4 h-[4rem] md:h-[5rem] rounded-2xl bg-slate-800/80"></div>
+            <div className="h-20 w-full border-y border-slate-800/40 flex items-center gap-12">
+              <div className="w-24 h-8 bg-slate-800/60 rounded-lg"></div>
+              <div className="w-24 h-8 bg-slate-800/60 rounded-lg"></div>
+            </div>
+          </div>
+
+          {/* Skeleton Window Gallery Mac-Style */}
+          <div className="w-full aspect-video md:aspect-[16/9] rounded-[1.2rem] bg-slate-900/60 border border-slate-800/40 flex flex-col">
+            <div className="h-[2.8rem] border-b border-slate-800/40 flex items-center px-4 gap-2 bg-slate-950/40">
+              <div className="w-3.5 h-3.5 rounded-full bg-slate-800"></div>
+              <div className="w-3.5 h-3.5 rounded-full bg-slate-800"></div>
+              <div className="w-3.5 h-3.5 rounded-full bg-slate-800"></div>
+            </div>
+            <div className="flex-1 bg-slate-800/20"></div>
+          </div>
+
+          {/* Skeleton Overview (Deskripsi & Tech) */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 pt-4">
+            <div className="md:col-span-2 space-y-4">
+              <div className="w-48 h-8 bg-slate-800/80 rounded-xl"></div>
+              <div className="w-full h-5 bg-slate-800/40 rounded-lg"></div>
+              <div className="w-full h-5 bg-slate-800/40 rounded-lg"></div>
+              <div className="w-4/5 h-5 bg-slate-800/40 rounded-lg"></div>
+            </div>
+            <div className="h-48 bg-slate-900/40 border border-slate-800/40 rounded-3xl p-8">
+              <div className="w-32 h-6 bg-slate-800/80 rounded-lg mb-4"></div>
+              <div className="flex flex-wrap gap-2">
+                <div className="w-16 h-8 bg-slate-800/40 rounded-lg"></div>
+                <div className="w-20 h-8 bg-slate-800/40 rounded-lg"></div>
+                <div className="w-14 h-8 bg-slate-800/40 rounded-lg"></div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }

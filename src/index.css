@@ -15,6 +15,11 @@
       transform: translateX(-50%);
     }
   }
+  @keyframes shimmer {
+    100% {
+      transform: translateX(100%);
+    }
+  }
 }
 
 @layer base {
@@ -30,6 +35,8 @@
   html {
     font-size: 62.5%;
     scroll-behavior: smooth;
+    overflow-x: hidden; /* <--- TAMBAHKAN INI */
+    width: 100%;
   }
 
   /* --- TEMA TERANG (DEFAULT) --- */
@@ -67,6 +74,8 @@
     transition:
       background-color 0.4s ease,
       color 0.4s ease;
+    overflow-x: hidden; /* <--- TAMBAHKAN INI */
+    width: 100%;
   }
   h1,
   h2,
