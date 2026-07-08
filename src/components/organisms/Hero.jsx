@@ -23,11 +23,12 @@ export default function Hero({ ref }) {
     <section
       ref={ref}
       id="home"
-      className="flex flex-col-reverse md:flex-row items-center justify-center gap-16 min-h-screen px-[9%]"
+      // PERBAIKAN: Menggunakan justify-between dan mengatur ulang padding agar seimbang di HP
+      className="flex flex-col-reverse md:flex-row items-center justify-between gap-10 md:gap-16 min-h-screen px-[9%] pt-[14rem] md:pt-[10rem] pb-10"
     >
-      {/* KIRI */}
+      {/* KIRI (Teks) */}
       <motion.div
-        className="flex-1 text-center md:text-left"
+        className="flex-1 text-center md:text-left z-10"
         initial="hidden"
         animate="visible"
         variants={fadeUp}
@@ -71,9 +72,10 @@ export default function Hero({ ref }) {
         <Button href="#contact">Konsultasi Gratis</Button>
       </motion.div>
 
-      {/* KANAN */}
+      {/* KANAN (Spline 3D) */}
       <motion.div
-        className="flex-1 flex justify-center mt-16 md:mt-0"
+        // PERBAIKAN: Menghapus mt-16 dan menggantinya dengan mb-8 di HP agar ada jarak ke teks di bawahnya
+        className="flex-1 flex justify-center mb-8 md:mb-0 md:mt-0"
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.8, delay: 0.2 }}
@@ -82,8 +84,11 @@ export default function Hero({ ref }) {
           <div className="absolute w-[60%] h-[60%] bg-[var(--color-primary)] rounded-full blur-[100px] opacity-20 pointer-events-none"></div>
 
           {/* Render Spline 3D */}
-          <div className="absolute inset-0 w-full h-full">
-            <Spline scene="https://prod.spline.design/eildHLAFt-9c1Y9R/scene.splinecode" />
+          <div className="absolute inset-0 w-full h-full pointer-events-none md:pointer-events-auto">
+            <Spline
+              className=" ml-9"
+              scene="https://prod.spline.design/eildHLAFt-9c1Y9R/scene.splinecode"
+            />
           </div>
         </div>
       </motion.div>

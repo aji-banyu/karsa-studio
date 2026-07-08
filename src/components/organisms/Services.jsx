@@ -117,6 +117,7 @@ export default function Services({ ref }) {
 
             <div className="mt-auto pt-[2rem] z-10">
               <button
+                type="button"
                 onClick={() =>
                   !service.isComingSoon && setSelectedService(service)
                 }

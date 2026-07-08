@@ -28,8 +28,9 @@ export default function Header({ activeSection }) {
           : "bg-transparent"
       }`}
     >
+      {/* FIX 1: href diubah ke #home untuk mencegah layar melompat ke atas */}
       <a
-        href="#"
+        href="#home"
         className="text-[2.5rem] font-semibold text-[var(--text-main)] transition-colors"
       >
         Karsa<span className="text-[var(--color-primary)]">.Studio</span>
@@ -43,10 +44,11 @@ export default function Header({ activeSection }) {
       </div>
 
       <nav
-        className={`absolute top-full left-0 w-full bg-[var(--bg-main)] p-[1rem_3%] shadow-[0_0.5rem_1rem_rgba(0,0,0,0.2)] border-t border-[var(--border-color)] md:static md:w-auto md:p-0 md:bg-transparent md:shadow-none md:border-none transition-all duration-300 md:flex ${
+        // FIX 2: Penambahan pointer-events-none saat menu ditutup agar tidak menghalangi robot Spline
+        className={`absolute top-full left-0 w-full bg-[var(--bg-main)] p-[1rem_3%] shadow-[0_0.5rem_1rem_rgba(0,0,0,0.2)] border-t border-[var(--border-color)] md:static md:w-auto md:p-0 md:bg-transparent md:shadow-none md:border-none transition-all duration-300 md:flex md:pointer-events-auto md:opacity-100 md:translate-y-0 ${
           isMenuOpen
-            ? "translate-y-0"
-            : "max-md:[-translate-y-[1000px]] max-md:opacity-0"
+            ? "translate-y-0 opacity-100 pointer-events-auto"
+            : "max-md:-translate-y-10 max-md:opacity-0 max-md:pointer-events-none"
         }`}
       >
         {navLinks.map((link) => (
