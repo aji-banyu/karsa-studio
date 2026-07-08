@@ -1,7 +1,6 @@
 import { motion } from "framer-motion";
 import {
   BiLogoInstagramAlt,
-  BiLogoFacebook,
   BiLogoWhatsapp,
   // BiLogoGithub,
   BiUpArrowAlt,
@@ -45,17 +44,23 @@ export default function Footer() {
           {/* Ikon Sosial Media Kecil */}
           <div className="flex gap-4">
             {[
-              BiLogoInstagramAlt,
-              BiLogoFacebook,
-              BiLogoWhatsapp,
-              // BiLogoGithub,
-            ].map((Icon, index) => (
+              {
+                Icon: BiLogoInstagramAlt,
+                url: "https://www.instagram.com/karsa_studi?igsh=MW13aWtodnNoY2R6dQ==",
+              },
+              {
+                Icon: BiLogoWhatsapp,
+                url: "https://wa.me/6287819844990?text=",
+              },
+            ].map((item, index) => (
               <a
                 key={index}
-                href="#"
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-[4rem] h-[4rem] rounded-full bg-[var(--bg-main)] border border-[var(--border-color)] flex items-center justify-center text-[2rem] text-[var(--text-muted)] hover:bg-[var(--color-primary)] hover:text-white hover:border-[var(--color-primary)] transition-all duration-300 hover:-translate-y-1 shadow-sm hover:shadow-[0_0_1rem_var(--color-primary)]"
               >
-                <Icon />
+                <item.Icon />
               </a>
             ))}
           </div>

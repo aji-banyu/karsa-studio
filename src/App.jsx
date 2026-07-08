@@ -1,4 +1,3 @@
-// src/App.jsx
 import { useState, useEffect } from "react";
 import {
   BrowserRouter as Router,
@@ -9,17 +8,21 @@ import {
 import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion";
 import { Toaster } from "react-hot-toast";
 
-// Import Komponen Hiasan & Landing Page
+// --- KOMPONEN ATOM & MOLEKUL ---
 import CustomCursor from "./components/atoms/CustomCursor";
+import FloatingWhatsApp from "./components/atoms/FloatingWhatsApp";
+import Preloader from "./components/molecules/Preloader";
+import ProtectedRoute from "./components/atoms/ProtectedRoute";
+
+// --- HALAMAN PUBLIK ---
 import Home from "./components/pages/Home";
 import PortfolioDetail from "./components/pages/PortfolioDetail";
-import Preloader from "./components/molecules/Preloader";
+import Login from "./components/pages/Login";
 
-// Import Komponen Admin Dashboard
+// --- HALAMAN ADMIN ---
 import DashboardLayout from "./components/templates/DashboardLayout";
-import ManagePortfolio from "./components/pages/dashboard/ManagePortfolio";
-import FloatingWhatsApp from "./components/atoms/FloatingWhatsApp";
 import Overview from "./components/pages/dashboard/Overview";
+import ManagePortfolio from "./components/pages/dashboard/ManagePortfolio";
 
 function AppContent() {
   const location = useLocation();
@@ -29,26 +32,32 @@ function AppContent() {
     damping: 30,
     restDelta: 0.001,
   });
+
+  // STATE PRELOADER
   const [isLoading, setIsLoading] = useState(true);
 
-  // LOGIKA UTAMA: Deteksi apakah user sedang di Dashboard
-  const isAdminRoute = location.pathname.startsWith("/admin");
+  // Deteksi apakah user berada di area admin ATAU di halaman login
+  const isAuthOrAdminRoute =
+    location.pathname.startsWith("/admin") || location.pathname === "/login";
 
   useEffect(() => {
+    // Hilangkan preloader setelah 2 detik
     const timer = setTimeout(() => setIsLoading(false), 2000);
     return () => clearTimeout(timer);
   }, []);
 
   return (
     <>
+      {/* 1. PRELOADER GLOBAL (Akan tampil saat buka web) */}
       <AnimatePresence mode="wait">
         {isLoading && <Preloader key="preloader" />}
       </AnimatePresence>
 
       <Toaster position="bottom-right" />
 
-      {/* RENDER BERSYARAT: Hanya tampil di luar /admin */}
-      {!isAdminRoute && (
+      {/* 2. RENDER BERSYARAT: FRONTEND PUBLIK */}
+      {!isAuthOrAdminRoute ? (
+        // Pembungkus ini MENGUNCI sumbu X (layar HP geser) dan merender halaman publik
         <div className="w-full overflow-x-hidden relative">
           <CustomCursor />
           <motion.div
@@ -56,23 +65,36 @@ function AppContent() {
             style={{ scaleX }}
           />
           <FloatingWhatsApp />
+
+          <AnimatePresence mode="wait">
+            <Routes location={location} key={location.pathname}>
+              <Route path="/" element={<Home />} />
+              <Route path="/portfolio/:id" element={<PortfolioDetail />} />
+            </Routes>
+          </AnimatePresence>
         </div>
+      ) : (
+        /* 3. RENDER BERSYARAT: BACKEND ADMIN & LOGIN */
+        <AnimatePresence mode="wait">
+          <Routes location={location} key={location.pathname}>
+            {/* Rute Login */}
+            <Route path="/login" element={<Login />} />
+
+            {/* Rute Admin (Dilindungi Satpam) */}
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute>
+                  <DashboardLayout />
+                </ProtectedRoute>
+              }
+            >
+              <Route index element={<Overview />} />
+              <Route path="portfolio" element={<ManagePortfolio />} />
+            </Route>
+          </Routes>
+        </AnimatePresence>
       )}
-
-      {/* Rute Aplikasi */}
-      <AnimatePresence mode="wait">
-        <Routes location={location} key={location.pathname}>
-          {/* Rute Pengunjung */}
-          <Route path="/" element={<Home />} />
-          <Route path="/portfolio/:id" element={<PortfolioDetail />} />
-
-          {/* Rute Administrator */}
-          <Route path="/admin" element={<DashboardLayout />}>
-            <Route index element={<Overview />} />
-            <Route path="portfolio" element={<ManagePortfolio />} />
-          </Route>
-        </Routes>
-      </AnimatePresence>
     </>
   );
 }

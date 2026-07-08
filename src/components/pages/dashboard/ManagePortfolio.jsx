@@ -20,7 +20,11 @@ export default function ManagePortfolio() {
   const [isUploading, setIsUploading] = useState(false);
   const [editingId, setEditingId] = useState(null);
 
-  const [imageFiles, setImageFiles] = useState([]);
+  // STATE BARU UNTUK MANAJEMEN GAMBAR
+  const [existingImages, setExistingImages] = useState([]); // Menyimpan URL gambar yang sudah ada
+  const [imagesToDelete, setImagesToDelete] = useState([]); // Menyimpan URL gambar yang ditandai untuk dihapus
+  const [imageFiles, setImageFiles] = useState([]); // Menyimpan file fisik gambar BARU yang akan diupload
+
   const [formData, setFormData] = useState({
     title: "",
     category: "UI/UX Design",
@@ -29,7 +33,6 @@ export default function ManagePortfolio() {
     source_code: "",
     figma_link: "",
     tech_stack: "",
-    image_urls: [],
   });
 
   useEffect(() => {
@@ -40,13 +43,13 @@ export default function ManagePortfolio() {
   }, [status, dispatch]);
 
   const handleDelete = (id) => {
-    if (window.confirm("Yakin ingin menghapus proyek ini secara permanen?"))
+    if (window.confirm("Yakin ingin menghapus proyek ini secara permanen?")) {
       dispatch(deletePortfolio(id));
+      // Catatan: Di aplikasi skala besar, kamu juga harus menghapus gambarnya dari Storage di sini.
+    }
   };
 
-  // --- FUNGSI BARU: SAKLAR PUBLISH/DRAFT ---
   const handleTogglePublish = (item) => {
-    // Jika data lama tidak punya is_published, kita anggap true.
     const currentStatus = item.is_published === false ? false : true;
     dispatch(
       updatePortfolio({
@@ -56,6 +59,7 @@ export default function ManagePortfolio() {
     );
   };
 
+  // KETIKA TOMBOL EDIT DIKLIK
   const handleEditClick = (item) => {
     setFormData({
       title: item.title,
@@ -65,13 +69,18 @@ export default function ManagePortfolio() {
       source_code: item.source_code || "",
       figma_link: item.figma_link || "",
       tech_stack: item.tech_stack || "",
-      image_urls: item.image_urls || [],
     });
     setEditingId(item.id);
-    setImageFiles([]);
+
+    // Set gambar lama ke dalam state khusus
+    setExistingImages(item.image_urls || []);
+    setImagesToDelete([]); // Kosongkan daftar hapus
+    setImageFiles([]); // Kosongkan input file baru
+
     setIsModalOpen(true);
   };
 
+  // KETIKA TOMBOL TAMBAH BARU DIKLIK
   const handleOpenAddModal = () => {
     setFormData({
       title: "",
@@ -81,9 +90,10 @@ export default function ManagePortfolio() {
       source_code: "",
       figma_link: "",
       tech_stack: "",
-      image_urls: [],
     });
     setEditingId(null);
+    setExistingImages([]);
+    setImagesToDelete([]);
     setImageFiles([]);
     setIsModalOpen(true);
   };
@@ -92,13 +102,43 @@ export default function ManagePortfolio() {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   const handleFileChange = (e) => setImageFiles(Array.from(e.target.files));
 
+  // --- FUNGSI MANAJEMEN GAMBAR (UI) ---
+  const handleSetCover = (index) => {
+    const newImages = [...existingImages];
+    const [selectedImage] = newImages.splice(index, 1); // Cabut gambar dari posisinya
+    newImages.unshift(selectedImage); // Taruh di urutan paling depan (index 0)
+    setExistingImages(newImages);
+  };
+
+  const handleRemoveExistingImage = (index) => {
+    const newImages = [...existingImages];
+    const [removedImage] = newImages.splice(index, 1); // Cabut gambar dari array
+    setExistingImages(newImages); // Update tampilan UI
+    setImagesToDelete([...imagesToDelete, removedImage]); // Masukkan ke daftar "Tunggu Dieksekusi (Dihapus)"
+  };
+  // ------------------------------------
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsUploading(true);
+
     try {
-      let finalImageUrls = formData.image_urls;
+      // 1. HAPUS GAMBAR LAMA DARI STORAGE (Jika ada yang ditandai untuk dihapus)
+      if (imagesToDelete.length > 0) {
+        const filesToRemove = imagesToDelete.map((url) => url.split("/").pop());
+        const { error: deleteError } = await supabase.storage
+          .from("portfolio_images")
+          .remove(filesToRemove);
+        if (deleteError)
+          console.warn(
+            "Peringatan: Gagal menghapus beberapa gambar lama.",
+            deleteError.message,
+          );
+      }
+
+      // 2. UPLOAD GAMBAR BARU (Jika ada)
+      let uploadedUrls = [];
       if (imageFiles.length > 0) {
-        let uploadedUrls = [];
         for (const file of imageFiles) {
           const fileExt = file.name.split(".").pop();
           const fileName = `${Math.random().toString(36).substring(2, 15)}.${fileExt}`;
@@ -111,8 +151,11 @@ export default function ManagePortfolio() {
             .getPublicUrl(fileName);
           uploadedUrls.push(data.publicUrl);
         }
-        finalImageUrls = uploadedUrls;
       }
+
+      // 3. GABUNGKAN GAMBAR LAMA (Yang dipertahankan) & GAMBAR BARU
+      // Karena Visual Utama adalah index ke-0, existingImages (yang sudah diatur urutannya) ditaruh di depan.
+      const finalImageUrls = [...existingImages, ...uploadedUrls];
 
       const dataToSave = {
         title: formData.title,
@@ -123,9 +166,9 @@ export default function ManagePortfolio() {
         figma_link: formData.figma_link,
         tech_stack: formData.tech_stack,
         image_urls: finalImageUrls,
-        // Note: is_published tidak perlu diikutsertakan di form, default-nya true (diatur di database)
       };
 
+      // 4. SIMPAN KE DATABASE
       if (editingId) {
         await dispatch(
           updatePortfolio({ id: editingId, updatedData: dataToSave }),
@@ -164,12 +207,6 @@ export default function ManagePortfolio() {
         </button>
       </div>
 
-      {status === "failed" && (
-        <div className="bg-red-500/10 border border-red-500/30 p-6 text-red-400 text-[14px]">
-          {error}
-        </div>
-      )}
-
       <div className="bg-slate-900 border border-slate-800/60 rounded-2xl overflow-hidden shadow-xl">
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
@@ -192,19 +229,9 @@ export default function ManagePortfolio() {
                   </td>
                 </tr>
               )}
-              {status === "succeeded" && portfolios.length === 0 && (
-                <tr>
-                  <td colSpan="4" className="p-20 text-center text-slate-300">
-                    Belum Ada Proyek
-                  </td>
-                </tr>
-              )}
-
               {status === "succeeded" &&
                 portfolios.map((item) => {
-                  // Menentukan status publikasi saat ini
                   const isPublished = item.is_published !== false;
-
                   return (
                     <tr
                       key={item.id}
@@ -241,29 +268,21 @@ export default function ManagePortfolio() {
                       </td>
                       <td className="px-6 py-4">
                         <div className="flex flex-col gap-2 items-start">
-                          {/* Lencana (Badge) Publikasi */}
                           <span
                             className={`px-3 py-1 rounded-full text-[11px] font-bold border ${isPublished ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : "bg-slate-500/10 text-slate-400 border-slate-500/20"}`}
                           >
                             {isPublished ? "👁️ Publik" : "🔒 Sembunyi"}
                           </span>
-                          <span
-                            className={`text-[11px] font-bold ${item.status === "Completed" ? "text-green-400" : "text-amber-400"}`}
-                          >
-                            • {item.status || "Completed"}
-                          </span>
                         </div>
                       </td>
                       <td className="px-6 py-4 text-right">
                         <div className="flex justify-end gap-2">
-                          {/* TOMBOL SAKLAR PUBLISH/DRAFT */}
                           <button
                             onClick={() => handleTogglePublish(item)}
                             className={`hover:text-white px-3 py-1.5 rounded-lg transition-all text-[12px] font-medium cursor-pointer ${isPublished ? "text-amber-400 bg-amber-400/10 hover:bg-amber-500" : "text-emerald-400 bg-emerald-400/10 hover:bg-emerald-500"}`}
                           >
                             {isPublished ? "Sembunyikan" : "Tampilkan"}
                           </button>
-
                           <button
                             onClick={() => handleEditClick(item)}
                             className="text-slate-400 hover:text-white bg-slate-800 hover:bg-slate-700 px-3 py-1.5 rounded-lg transition-all text-[12px] font-medium cursor-pointer"
@@ -286,7 +305,6 @@ export default function ManagePortfolio() {
         </div>
       </div>
 
-      {/* --- KODE MODAL TETAP SAMA SEPERTI SEBELUMNYA --- */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4">
           <div className="bg-slate-900 w-full max-w-3xl border border-slate-700 rounded-2xl p-8 shadow-2xl overflow-y-auto max-h-[90vh]">
@@ -294,9 +312,60 @@ export default function ManagePortfolio() {
               className="text-[20px] font-bold text-white mb-6"
               style={{ fontFamily: "var(--font-heading)" }}
             >
-              {editingId ? "Edit Proyek" : "Tambah Proyek Lengkap"}
+              {editingId ? "Edit Proyek" : "Tambah Proyek Baru"}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-5">
+              {/* --- AREA MANAJEMEN GAMBAR LAMA (Hanya Muncul Saat Edit) --- */}
+              {editingId && existingImages.length > 0 && (
+                <div className="bg-slate-950/50 p-4 rounded-xl border border-slate-800/60 mb-6">
+                  <label className="block text-[12px] font-medium text-slate-400 mb-3">
+                    Gambar Saat Ini (Geser Cover ke Urutan Pertama)
+                  </label>
+                  <div className="flex gap-4 overflow-x-auto pb-2">
+                    {existingImages.map((imgUrl, index) => (
+                      <div
+                        key={index}
+                        className={`relative w-32 h-24 shrink-0 rounded-lg overflow-hidden border-2 ${index === 0 ? "border-[var(--color-primary)] shadow-[0_0_10px_var(--color-primary)]" : "border-slate-700"}`}
+                      >
+                        <img
+                          src={imgUrl}
+                          alt={`Preview ${index}`}
+                          className="w-full h-full object-cover"
+                        />
+
+                        {/* Label Visual Utama untuk index 0 */}
+                        {index === 0 && (
+                          <div className="absolute top-0 left-0 w-full bg-[var(--color-primary)] text-white text-[9px] font-bold text-center py-0.5">
+                            COVER UTAMA
+                          </div>
+                        )}
+
+                        {/* Tombol Aksi Gambar */}
+                        <div className="absolute bottom-0 left-0 w-full bg-black/80 flex items-center justify-between p-1 opacity-0 hover:opacity-100 transition-opacity">
+                          {index !== 0 && (
+                            <button
+                              type="button"
+                              onClick={() => handleSetCover(index)}
+                              className="text-[10px] text-emerald-400 hover:text-emerald-300 font-bold px-1 cursor-pointer"
+                            >
+                              Jadikan Cover
+                            </button>
+                          )}
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveExistingImage(index)}
+                            className="text-[10px] text-red-400 hover:text-red-300 font-bold px-1 cursor-pointer ml-auto"
+                          >
+                            Hapus
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {/* ------------------------------------------------------------- */}
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div className="space-y-4">
                   <div>
@@ -355,23 +424,22 @@ export default function ManagePortfolio() {
                     />
                   </div>
                 </div>
+
                 <div className="space-y-4">
                   <div>
                     <label className="block text-[12px] font-medium text-slate-400 mb-1.5">
-                      Upload Gambar Baru{" "}
-                      {editingId ? (
-                        <span className="text-amber-400 ml-1">
-                          (Kosongkan jika sama)
-                        </span>
-                      ) : (
-                        ""
-                      )}
+                      {editingId
+                        ? "Tambahkan Gambar Baru (Opsional)"
+                        : "Upload Gambar (Wajib)"}
                     </label>
                     <input
                       type="file"
                       multiple
                       accept="image/*"
-                      required={!editingId}
+                      // Wajib jika ini project baru ATAU jika saat edit semua gambar lama sudah dihapus
+                      required={
+                        !editingId || (editingId && existingImages.length === 0)
+                      }
                       onChange={handleFileChange}
                       className="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-2 text-[14px] text-slate-400 outline-none cursor-pointer file:mr-4 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-[12px] file:font-semibold file:bg-slate-800 file:text-slate-300"
                     />

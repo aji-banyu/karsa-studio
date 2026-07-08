@@ -2,7 +2,7 @@ import { FaWhatsapp } from "react-icons/fa"; // Pastikan react-icons sudah terin
 
 export default function FloatingWhatsApp() {
   // Ganti dengan nomor WhatsApp Karsa Studio (Gunakan 62, hilangkan angka 0 di depan)
-  const phoneNumber = "6281234567890";
+  const phoneNumber = "6287819844990";
   // Pesan default yang otomatis terisi saat klien membuka WA
   const message = encodeURIComponent(
     "Halo Karsa Studio, saya tertarik untuk berdiskusi mengenai pembuatan website.",

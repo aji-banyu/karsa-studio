@@ -1,10 +1,6 @@
 import { ReactTyped } from "react-typed";
 import { motion } from "framer-motion";
-import {
-  BiLogoFacebook,
-  BiLogoInstagramAlt,
-  BiLogoWhatsapp,
-} from "react-icons/bi";
+import { BiLogoInstagramAlt, BiLogoWhatsapp } from "react-icons/bi";
 import SocialIcon from "../atoms/SocialIcon";
 import Button from "../atoms/Button";
 import Spline from "@splinetool/react-spline";
@@ -64,9 +60,14 @@ export default function Hero({ ref }) {
         </p>
 
         <div className="flex justify-center md:justify-start gap-6 mb-10">
-          <SocialIcon icon={BiLogoInstagramAlt} />
-          <SocialIcon icon={BiLogoFacebook} />
-          <SocialIcon icon={BiLogoWhatsapp} />
+          <SocialIcon
+            href="https://www.instagram.com/karsa_studi?igsh=MW13aWtodnNoY2R6dQ=="
+            icon={BiLogoInstagramAlt}
+          />
+          <SocialIcon
+            href="https://wa.me/6287819844990?text="
+            icon={BiLogoWhatsapp}
+          />
         </div>
 
         <Button href="#contact">Konsultasi Gratis</Button>

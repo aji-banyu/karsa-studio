@@ -20,14 +20,14 @@ export default function Services({ ref }) {
       icon: <BiPalette />,
       title: "Paket Rupa (UI/UX Design)",
       desc: "Riset pengguna, Wireframing, dan High-Fidelity Mockup interaktif. Cocok bagi Anda yang sudah memiliki tim developer sendiri.",
-      price: "Mulai Rp 350.000",
+      price: "Mulai Rp 100.000",
       isComingSoon: false,
     },
     {
       icon: <BiLayout />,
       title: "Paket Layar (Landing Page)",
       desc: "Desain UI/UX eksklusif dilanjutkan dengan coding (pengembangan) menjadi satu halaman website berkonversi tinggi yang siap rilis.",
-      price: "Mulai Rp 650.000",
+      price: "Mulai Rp 250.000",
       isComingSoon: false,
     },
     {

@@ -85,6 +85,8 @@ export default function Portfolio({ ref }) {
           {/* Mengambil 4 data teratas dari Database */}
           {portfolios
             .filter((project) => project.is_published !== false)
+            .slice() // 1. Buat salinan data agar tidak merusak state asli dari Redux
+            .reverse() // 2. Balik urutannya (Dari "Terbaru" menjadi "Terlama di awal")
             .slice(0, 4)
             .map((project, index) => {
               const gridSpan =
