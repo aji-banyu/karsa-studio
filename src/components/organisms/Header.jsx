@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { BiMenu, BiX } from "react-icons/bi";
+import ThemeToggle from "../atoms/ThemeToggle"; // Pastikan path import ini sesuai dengan foldermu
 
 export default function Header({ activeSection }) {
   const [isSticky, setIsSticky] = useState(false);
@@ -11,14 +12,7 @@ export default function Header({ activeSection }) {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const navLinks = [
-    "home",
-    "about",
-    "services",
-    // "faq",
-    "portofolio",
-    "contact",
-  ];
+  const navLinks = ["home", "about", "services", "portofolio", "contact"];
 
   return (
     <header
@@ -28,7 +22,7 @@ export default function Header({ activeSection }) {
           : "bg-transparent"
       }`}
     >
-      {/* FIX 1: href diubah ke #home untuk mencegah layar melompat ke atas */}
+      {/* 1. KIRI: Logo */}
       <a
         href="#home"
         className="text-[2.5rem] font-semibold text-[var(--text-main)] transition-colors"
@@ -36,15 +30,8 @@ export default function Header({ activeSection }) {
         Karsa<span className="text-[var(--color-primary)]">.Studio</span>
       </a>
 
-      <div
-        className="text-[3.6rem] text-[var(--text-main)] cursor-pointer md:hidden"
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
-      >
-        {isMenuOpen ? <BiX /> : <BiMenu />}
-      </div>
-
+      {/* 2. TENGAH: Menu Navigasi (Di desktop posisinya di tengah otomatis) */}
       <nav
-        // FIX 2: Penambahan pointer-events-none saat menu ditutup agar tidak menghalangi robot Spline
         className={`absolute top-full left-0 w-full bg-[var(--bg-main)] p-[1rem_3%] shadow-[0_0.5rem_1rem_rgba(0,0,0,0.2)] border-t border-[var(--border-color)] md:static md:w-auto md:p-0 md:bg-transparent md:shadow-none md:border-none transition-all duration-300 md:flex md:pointer-events-auto md:opacity-100 md:translate-y-0 ${
           isMenuOpen
             ? "translate-y-0 opacity-100 pointer-events-auto"
@@ -56,7 +43,7 @@ export default function Header({ activeSection }) {
             key={link}
             href={`#${link}`}
             onClick={() => setIsMenuOpen(false)}
-            className={`block text-[2rem] md:text-[1.7rem] my-12 md:my-0 md:ml-16 capitalize transition-all duration-300 font-medium ${
+            className={`block text-[2rem] md:text-[1.7rem] my-12 md:my-0 md:mx-6 lg:mx-10 capitalize transition-all duration-300 font-medium ${
               activeSection === link
                 ? "text-[var(--color-primary)]"
                 : "text-[var(--text-main)] hover:text-[var(--color-primary)]"
@@ -66,6 +53,20 @@ export default function Header({ activeSection }) {
           </a>
         ))}
       </nav>
+
+      {/* 3. KANAN: Aksi (Toggle Tema & Hamburger Menu) */}
+      <div className="flex items-center gap-4 md:gap-6">
+        {/* Tombol Tema sekarang duduk rapi di sini */}
+        <ThemeToggle />
+
+        {/* Tombol Hamburger (Hanya muncul di Mobile) */}
+        <div
+          className="text-[3.6rem] text-[var(--text-main)] cursor-pointer md:hidden"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          {isMenuOpen ? <BiX /> : <BiMenu />}
+        </div>
+      </div>
     </header>
   );
 }

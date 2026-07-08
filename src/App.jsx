@@ -10,7 +10,6 @@ import { motion, useScroll, useSpring, AnimatePresence } from "framer-motion";
 import { Toaster } from "react-hot-toast";
 
 // Import Komponen Hiasan & Landing Page
-import ThemeToggle from "./components/atoms/ThemeToggle";
 import CustomCursor from "./components/atoms/CustomCursor";
 import Home from "./components/pages/Home";
 import PortfolioDetail from "./components/pages/PortfolioDetail";
@@ -57,7 +56,6 @@ function AppContent() {
             style={{ scaleX }}
           />
           <FloatingWhatsApp />
-          <ThemeToggle />
         </div>
       )}
 
